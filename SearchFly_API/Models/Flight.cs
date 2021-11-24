@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,13 +21,16 @@ namespace SearchFly_API.Models
         [Required]
         public DateTime DepartureDate { get; set; }
 
+        [ForeignKey("Transport")]
+
+        public int TransportRefId { get; set; }
+        public Transport Transport { get; set; }
+
         [Required]
         public decimal Price { get; set; }
 
         [Required]
         public string Currency { get; set; }
-
-        [Required]
-        public List<Transport> Transport { get; set; }
+        
     }
 }

@@ -44,7 +44,12 @@ namespace SearchFly_API.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("TransportRefId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TransportRefId");
 
                     b.ToTable("Flights");
                 });
@@ -56,33 +61,29 @@ namespace SearchFly_API.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("FlightId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FlightNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FligthId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("FlightId");
 
                     b.ToTable("Transports");
                 });
 
-            modelBuilder.Entity("SearchFly_API.Models.Transport", b =>
-                {
-                    b.HasOne("SearchFly_API.Models.Flight", null)
-                        .WithMany("Transport")
-                        .HasForeignKey("FlightId");
-                });
-
             modelBuilder.Entity("SearchFly_API.Models.Flight", b =>
                 {
+                    b.HasOne("SearchFly_API.Models.Transport", "Transport")
+                        .WithMany("Flight")
+                        .HasForeignKey("TransportRefId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Transport");
+                });
+
+            modelBuilder.Entity("SearchFly_API.Models.Transport", b =>
+                {
+                    b.Navigation("Flight");
                 });
 #pragma warning restore 612, 618
         }

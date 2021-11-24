@@ -12,10 +12,9 @@ namespace SearchFly_API.Models
         public int Id { get; set; }
 
         [Required]
-        public string FlightNumber { get; set; }
-
-        [Required]
-        public int FligthId { get; set; }
+        public string FlightNumber { get; set; }    
+        
+        public ICollection<Flight> Flight { get; set; }
 
     }
 }
