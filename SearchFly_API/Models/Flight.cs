@@ -21,7 +21,7 @@ namespace SearchFly_API.Models
         public DateTime DepartureDate { get; set; }
 
         [Required]
-        public Decimal Price { get; set; }
+        public decimal Price { get; set; }
 
         [Required]
         public string Currency { get; set; }
