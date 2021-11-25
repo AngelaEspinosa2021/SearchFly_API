@@ -1,4 +1,5 @@
-﻿using SearchFly_API.Models.Dto;
+﻿using SearchFly_API.Data;
+using SearchFly_API.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,13 @@ namespace SearchFly_API.Repository
 {
     public class FlightRepository : IFlightRepository
     {
+        private readonly ApplicationDbContext _db;
+
+        public FlightRepository(ApplicationDbContext db)
+        {
+            _db = db;
+        }
+
         public Task<FlightDto> CreateUpdate(FlightDto flightDto)
         {
             throw new NotImplementedException();
