@@ -100,6 +100,7 @@ namespace SearchFly_API.Controllers
                 _response.IsSucess = false;
                 _response.DisplayMessage = "Error al Grabar el Registro";
                 _response.ErrorMessage = new List<string> { ex.ToString() };
+                return BadRequest(_response);
             }
         }
 
