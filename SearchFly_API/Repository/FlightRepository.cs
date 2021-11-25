@@ -1,4 +1,5 @@
-﻿using SearchFly_API.Data;
+﻿using AutoMapper;
+using SearchFly_API.Data;
 using SearchFly_API.Models.Dto;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,12 @@ namespace SearchFly_API.Repository
     public class FlightRepository : IFlightRepository
     {
         private readonly ApplicationDbContext _db;
+        private IMapper _mapper;
 
-        public FlightRepository(ApplicationDbContext db)
+        public FlightRepository(ApplicationDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         public Task<FlightDto> CreateUpdate(FlightDto flightDto)
