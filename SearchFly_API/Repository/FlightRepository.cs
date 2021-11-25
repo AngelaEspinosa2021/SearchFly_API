@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SearchFly_API.Data;
+using SearchFly_API.Models;
 using SearchFly_API.Models.Dto;
 using System;
 using System.Collections.Generic;
@@ -34,9 +36,11 @@ namespace SearchFly_API.Repository
             throw new NotImplementedException();
         }
 
-        public Task<List<FlightDto>> GetFlights()
+        public async Task<List<FlightDto>> GetFlights()
         {
-            throw new NotImplementedException();
+            List<Flight> list = await _db.Flights.ToListAsync();
+
+            return _mapper.Map<List<FlightDto>>(list);
         }
     }
 }
