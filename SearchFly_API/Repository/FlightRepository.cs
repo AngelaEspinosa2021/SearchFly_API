@@ -31,9 +31,11 @@ namespace SearchFly_API.Repository
             throw new NotImplementedException();
         }
 
-        public Task<FlightDto> GetFlightById(int id)
+        public async Task<FlightDto> GetFlightById(int id)
         {
-            throw new NotImplementedException();
+            Flight flight = await _db.Flights.FindAsync(id);
+
+            return _mapper.Map<FlightDto>(flight);
         }
 
         public async Task<List<FlightDto>> GetFlights()
