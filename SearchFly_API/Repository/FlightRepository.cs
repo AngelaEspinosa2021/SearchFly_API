@@ -21,9 +21,20 @@ namespace SearchFly_API.Repository
             _mapper = mapper;
         }
 
-        public Task<FlightDto> CreateUpdate(FlightDto flightDto)
+        public async Task<FlightDto> CreateUpdate(FlightDto flightDto)
         {
-            throw new NotImplementedException();
+            Flight flight = _mapper.Map<FlightDto, Flight>(flightDto);
+            if (flight.Id > 0)
+            {
+                _db.Flights.Update(flight);
+            }
+            else
+            {
+                await _db.Flights.AddAsync(flight);
+            }
+            await _db.SaveChangesAsync();
+            return _mapper.Map<Flight, FlightDto>(flight);
+
         }
 
         public async Task<bool> DeleteFlight(int id)
