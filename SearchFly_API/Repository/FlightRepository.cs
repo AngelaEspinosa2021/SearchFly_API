@@ -26,9 +26,24 @@ namespace SearchFly_API.Repository
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteFlight(int id)
+        public async Task<bool> DeleteFlight(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Flight flight = await _db.Flights.FindAsync(id);
+                if(flight == null)
+                {
+                    return false;
+                }
+                _db.Flights.Remove(flight);
+                await _db.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<FlightDto> GetFlightById(int id)
