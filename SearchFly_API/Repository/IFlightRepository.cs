@@ -10,6 +10,6 @@ namespace SearchFly_API.Repository
     {
         Task<List<FlightDto>> GetFlights();
 
-        List<FlightDto> SearchFlights(string departureStation, string arrivalStation, string departureDate);
+        Task<List<FlightDto>> SearchFlights(string departureStation, string arrivalStation, DateTime departureDate);
     }
 }

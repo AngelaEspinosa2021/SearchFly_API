@@ -29,18 +29,35 @@ namespace SearchFly_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Flight>>> GetFlights()
         {
-            return await _context.Flights.ToListAsync();
+            try
+            {
+                var list = await _flightRepository.GetFlights();
+                _response.Result = list;
+                _response.DisplayMessage = "Lista de Vuelos Reservados";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSucess = false;
+                _response.ErrorMessage = new List<string> { ex.ToString() };
+            }
+
+            return Ok(_response);
         }
 
-        [HttpGet("{departureStation,arrivalStation,departureDate}")]
-        public async Task<ActionResult<IEnumerable<FlightDto>>> SearchFlights(string departureStation, string arrivalStation, DateTime departureDate)
-        {
-           
-        }
+        [HttpGet("{departureStation}/{arrivalStation}/{departureDate}")]
 
-        private bool FlightExists(int id)
+        public async Task<ActionResult<IEnumerable<Flight>>> SearchFlights(string departureStation, string arrivalStation, DateTime departureDate)
         {
-            return _context.Flights.Any(e => e.Id == id);
-        }
+            var reservedTimes = await _flightRepository.SearchFlights(departureStation, arrivalStation, departureDate);
+            if (reservedTimes == null)
+            {
+                _response.IsSucess = false;
+                _response.DisplayMessage = "No hay vuelos reservados.";
+                return NotFound(_response);
+            }
+            _response.Result = reservedTimes;
+            _response.DisplayMessage = "Listado de Vuelos ya reservados para ese dia.";
+            return Ok(reservedTimes);
+        }        
     }
 }

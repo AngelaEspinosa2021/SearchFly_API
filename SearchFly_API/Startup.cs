@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SearchFly_API.Data;
+using SearchFly_API.Repository;
 
 namespace SearchFly_API
 {
@@ -35,6 +36,8 @@ namespace SearchFly_API
             IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddScoped<IFlightRepository, FlightRepository>();
 
             services.AddSwaggerGen(c =>
             {

@@ -28,15 +28,14 @@ namespace SearchFly_API.Repository
             return _mapper.Map<List<FlightDto>>(list);
         }
 
-        List<FlightDto> IFlightRepository.SearchFlights(string departureStation, string arrivalStation, string departureDate)
+        public async Task<List<FlightDto>> SearchFlights(string departureStation, string arrivalStation, DateTime departureDate)
         {
-            List<Flight> lstFlights = new List<Flight>();
-            if (!string.IsNullOrEmpty(departureStation) && !string.IsNullOrEmpty(arrivalStation) && !string.IsNullOrEmpty(departureDate))
+            var _date = departureDate.ToString();
+            if (!string.IsNullOrEmpty(departureStation) && !string.IsNullOrEmpty(arrivalStation) && !string.IsNullOrEmpty(_date))
             {
-                DateTime _date = DateTime.Now;
-                DateTime.TryParse(departureDate, out _date);
+                var date = DateTime.Parse(_date);
                 var listFlights = _db.Flights
-                    .Where(m => m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation && m.DepartureDate == _date)
+                    .Where(m => m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation && m.DepartureDate == date)
                     .Select(m => new FlightDto
                     {
                         Id = m.Id,
@@ -47,6 +46,7 @@ namespace SearchFly_API.Repository
                         Price = (decimal)m.Price,
                         Currency = m.Currency,
                     });
+                
                 return listFlights.ToList();
             }
             return null;
