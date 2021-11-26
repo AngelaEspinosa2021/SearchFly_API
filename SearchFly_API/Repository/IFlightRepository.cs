@@ -10,10 +10,6 @@ namespace SearchFly_API.Repository
     {
         Task<List<FlightDto>> GetFlights();
 
-        Task<FlightDto> GetFlightById(int id);
-
-        Task<FlightDto> CreateUpdate(FlightDto flightDto);
-
-        Task<bool> DeleteFlight(int id);
+        List<FlightDto> SearchFlights(string departureStation, string arrivalStation, string departureDate);
     }
 }

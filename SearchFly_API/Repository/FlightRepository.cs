@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SearchFly_API.Data;
+using SearchFly_API.Models;
 using SearchFly_API.Models.Dto;
 using System;
 using System.Collections.Generic;
@@ -17,26 +19,37 @@ namespace SearchFly_API.Repository
         {
             _db = db;
             _mapper = mapper;
+        }      
+
+        public async Task<List<FlightDto>> GetFlights()
+        {
+            List<Flight> list = await _db.Flights.ToListAsync();
+
+            return _mapper.Map<List<FlightDto>>(list);
         }
 
-        public Task<FlightDto> CreateUpdate(FlightDto flightDto)
+        List<FlightDto> IFlightRepository.SearchFlights(string departureStation, string arrivalStation, string departureDate)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteFlight(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<FlightDto> GetFlightById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<FlightDto>> GetFlights()
-        {
-            throw new NotImplementedException();
+            List<Flight> lstFlights = new List<Flight>();
+            if (!string.IsNullOrEmpty(departureStation) && !string.IsNullOrEmpty(arrivalStation) && !string.IsNullOrEmpty(departureDate))
+            {
+                DateTime _date = DateTime.Now;
+                DateTime.TryParse(departureDate, out _date);
+                var listFlights = _db.Flights
+                    .Where(m => m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation && m.DepartureDate == _date)
+                    .Select(m => new FlightDto
+                    {
+                        Id = m.Id,
+                        DepartureStation = m.DepartureStation,
+                        ArrivalStation = m.ArrivalStation,
+                        DepartureDate = (DateTime)m.DepartureDate,
+                        Transport = m.Transport,
+                        Price = (decimal)m.Price,
+                        Currency = m.Currency,
+                    });
+                return listFlights.ToList();
+            }
+            return null;
         }
     }
 }
