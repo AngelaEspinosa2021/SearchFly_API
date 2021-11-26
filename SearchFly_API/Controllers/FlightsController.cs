@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SearchFly_API.Data;
 using SearchFly_API.Models;
 using SearchFly_API.Models.Dto;
+using SearchFly_API.Repository;
 
 namespace SearchFly_API.Controllers
 {
@@ -15,11 +16,13 @@ namespace SearchFly_API.Controllers
     [ApiController]
     public class FlightsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IFlightRepository _flightRepository;
+        protected ResponseDto _response;
 
-        public FlightsController(ApplicationDbContext context)
+        public FlightsController(IFlightRepository flightRepository)
         {
-            _context = context;
+            _flightRepository = flightRepository;
+            _response = new ResponseDto();
         }
 
         // GET: api/Flights
