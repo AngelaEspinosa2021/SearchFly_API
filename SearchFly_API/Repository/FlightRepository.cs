@@ -37,8 +37,9 @@ namespace SearchFly_API.Repository
             foreach (var flight in listFlights)
             {
                 var List = from m in listFlights
-                                 where m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation && m.DepartureDate == departureDate
+                                 where m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation && (m.DepartureDate.Date == departureDate.Date)
                                  select m;
+                
                 return _mapper.Map<List<FlightDto>>(List);
             }
 
