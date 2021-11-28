@@ -39,6 +39,8 @@ namespace SearchFly_API
 
             services.AddScoped<IFlightRepository, FlightRepository>();
 
+            services.AddCors();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -60,6 +62,10 @@ namespace SearchFly_API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(x => x.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {
