@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace SearchFly_API.Repository
 {
     public class FlightRepository : IFlightRepository
@@ -30,26 +31,19 @@ namespace SearchFly_API.Repository
 
         public async Task<List<FlightDto>> SearchFlights(string departureStation, string arrivalStation, DateTime departureDate)
         {
-            var _date = departureDate.ToString();
-            if (!string.IsNullOrEmpty(departureStation) && !string.IsNullOrEmpty(arrivalStation) && !string.IsNullOrEmpty(_date))
+            List<Flight> listFlights = await _db.Flights.ToListAsync();
+            var filterList = new List<Flight>();
+
+            foreach (var flight in listFlights)
             {
-                var date = DateTime.Parse(_date);
-                var listFlights = _db.Flights
-                    .Where(m => m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation && m.DepartureDate == date)
-                    .Select(m => new FlightDto
-                    {
-                        Id = m.Id,
-                        DepartureStation = m.DepartureStation,
-                        ArrivalStation = m.ArrivalStation,
-                        DepartureDate = (DateTime)m.DepartureDate,
-                        Transport = m.Transport,
-                        Price = (decimal)m.Price,
-                        Currency = m.Currency,
-                    });
-                
-                return listFlights.ToList();
+                var List = from m in listFlights
+                                 where m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation && m.DepartureDate == departureDate
+                                 select m;
+                return _mapper.Map<List<FlightDto>>(List);
             }
+
             return null;
+
         }
     }
 }
