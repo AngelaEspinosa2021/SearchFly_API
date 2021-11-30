@@ -38,6 +38,7 @@ namespace SearchFly_API.Repository
             List<DateTime> shedulesAvailable = new List<DateTime>();
             List<DateTime> filterList = new List<DateTime>();
             List<DateTime> allShedules = new List<DateTime>();
+            List<DateTime> allShedulesList = new List<DateTime>();
             allShedules.Add(Convert.ToDateTime("2021-01-01T00:00:00.0000000"));
             allShedules.Add(Convert.ToDateTime("2021-01-01T23:00:00.0000000"));
             allShedules.Add(Convert.ToDateTime("2021-01-01T22:00:00.0000000"));
@@ -61,8 +62,15 @@ namespace SearchFly_API.Repository
             allShedules.Add(Convert.ToDateTime("2021-01-01T04:00:00.0000000"));
             allShedules.Add(Convert.ToDateTime("2021-01-01T03:00:00.0000000"));
             allShedules.Add(Convert.ToDateTime("2021-01-01T02:00:00.0000000"));
-            allShedules.Add(Convert.ToDateTime("2021-01-01T01:00:00.0000000")); 
-            
+            allShedules.Add(Convert.ToDateTime("2021-01-01T01:00:00.0000000"));
+
+            TimeSpan times = new TimeSpan();
+            foreach (var list in allShedules)
+            {
+                times = TimeSpan.FromHours(list.Hour);
+                allShedulesList.Add(departureDate.Date + times);
+            }
+
             foreach (var flight in listFlights)
             {
                 var List = from m in listFlights
@@ -74,7 +82,8 @@ namespace SearchFly_API.Repository
                 }
                 
             }
-            shedulesAvailable = (from a in allShedules
+
+            shedulesAvailable = (from a in allShedulesList
                                  where !filterList.Any(x => x.Hour == a.Hour)
                                  select a).ToList();
             
