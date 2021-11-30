@@ -34,9 +34,10 @@ namespace SearchFly_API.Repository
         public async Task<List<FlightDto>> SearchFlights(string departureStation, string arrivalStation, DateTime departureDate)
         {
             List<Flight> listFlights = await _db.Flights.ToListAsync();
-            var shedulesAvailable = new List<DateTime>();
-            var filterList = new List<DateTime>();
-            var allShedules = new List<DateTime>();
+            List<Flight> finalList = new List<Flight>();
+            List<DateTime> shedulesAvailable = new List<DateTime>();
+            List<DateTime> filterList = new List<DateTime>();
+            List<DateTime> allShedules = new List<DateTime>();
             allShedules.Add(Convert.ToDateTime("2021-01-01T00:00:00.0000000"));
             allShedules.Add(Convert.ToDateTime("2021-01-01T23:00:00.0000000"));
             allShedules.Add(Convert.ToDateTime("2021-01-01T22:00:00.0000000"));
@@ -62,32 +63,27 @@ namespace SearchFly_API.Repository
             allShedules.Add(Convert.ToDateTime("2021-01-01T02:00:00.0000000"));
             allShedules.Add(Convert.ToDateTime("2021-01-01T01:00:00.0000000")); 
             
-
-
             foreach (var flight in listFlights)
             {
                 var List = from m in listFlights
-                                 where m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation
-                                 select m;
-                if(flight.DepartureDate.Date == departureDate.Date)
+                           where m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation
+                           select m;
+                if (flight.DepartureDate.Date == departureDate.Date)
                 {
                     filterList.Add(flight.DepartureDate);
-                }                
-                    //return _mapper.Map<List<FlightDto>>(List);
-            }
-            foreach (var list1 in filterList)
-            {
-                foreach (var list2 in allShedules)
-                {
-                    if (list2.Hour != list1.Hour)
-                    {    
-                        shedulesAvailable.Add(list2);                                     
-                       
-                    }
-                    
                 }
-            }            
-            return null;
+                
+            }
+            shedulesAvailable = (from a in allShedules
+                                 where !filterList.Any(x => x.Hour == a.Hour)
+                                 select a).ToList();
+            
+            foreach (var list in shedulesAvailable)
+            {
+                finalList.Add(new Flight {DepartureStation = departureStation, ArrivalStation = arrivalStation, DepartureDate = list});
+            }
+            return _mapper.Map<List<FlightDto>>(finalList);
         }
+
     }
 }
