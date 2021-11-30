@@ -97,7 +97,7 @@ namespace SearchFly_API.Repository
             foreach (var flight in listFlights)
             {
                 var List = from m in listFlights
-                           where m.DepartureStation == departureStation && m.ArrivalStation == arrivalStation
+                           where m.DepartureStation.ToLower() == departureStation.ToLower() && m.ArrivalStation.ToLower() == arrivalStation.ToLower()
                            select m;
                 if (flight.DepartureDate.Date == departureDate.Date)
                 {
