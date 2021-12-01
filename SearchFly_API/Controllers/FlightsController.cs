@@ -49,15 +49,18 @@ namespace SearchFly_API.Controllers
         public async Task<ActionResult<IEnumerable<Flight>>> SearchFlights(string departureStation, string arrivalStation, DateTime departureDate)
         {
             var reservedTimes = await _flightRepository.SearchFlights(departureStation, arrivalStation, departureDate);
-            if (reservedTimes == null)
-            {
-                _response.IsSucess = false;
-                _response.DisplayMessage = "No hay vuelos reservados.";
-                return NotFound(_response);
-            }
-            _response.Result = reservedTimes;
-            _response.DisplayMessage = "Listado de Vuelos ya reservados para ese dia.";
-            return Ok(reservedTimes);
+                       
+                if (reservedTimes == null)
+                {
+                    _response.IsSucess = false;
+                    _response.DisplayMessage = "No hay vuelos disponibles.";
+                    return NotFound(_response);
+                }
+
+                _response.Result = reservedTimes;
+                _response.DisplayMessage = "Listado de Vuelos ya reservados para ese dia.";
+                return Ok(reservedTimes);
+            
         }        
     }
 }
